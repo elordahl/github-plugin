@@ -52,8 +52,9 @@ public class GitHubWebHook implements UnprotectedRootAction {
      * Logs in as the given user and returns the connection object.
      */
     public Iterable<GitHub> login(String host, String userName) {
-        if (host.equals("github.com")) {
-            final List<Credential> l = DescriptorImpl.get().getCredentials();
+    	final List<Credential> l = DescriptorImpl.get().getCredentials();
+    	
+    	if (host.equals("github.com")) {
 
             // if the username is not an organization, we should have the right user account on file
             for (Credential c : l) {
@@ -87,6 +88,24 @@ public class GitHubWebHook implements UnprotectedRootAction {
                 }
             };
         } else {
+
+            // if the username is not an organization, we should have the right user account on file
+            for (Credential c : l) {
+            	LOGGER.info("Checking a credential!");
+            	try {
+            	    GitHub gh = c.login();
+            		
+	            if (gh.isCredentialValid() 
+	                    && userName.equals(gh.getMyself().getLogin())){
+	            	LOGGER.info("Validated credentials for: " + userName);
+	                return Collections.singleton(gh);
+	            }
+            	} catch (IOException e) {
+                    LOGGER.log(WARNING,"Failed to login with username="+c.username,e);
+                }
+            }
+            
+            LOGGER.info("No valid credentials found.");
             return Collections.<GitHub> emptyList();
         }
     }

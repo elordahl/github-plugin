@@ -33,7 +33,7 @@ public class Credential extends AbstractDescribableImpl<Credential> {
 
     public GitHub login() throws IOException {
         if (Util.fixEmpty(apiUrl) != null) {
-            return GitHub.connectToEnterprise(apiUrl,username,apiToken);
+            return GitHub.connectUsingOAuth(apiUrl, apiToken);
         }
         return GitHub.connect(username,apiToken,password.getPlainText());
     }
@@ -48,7 +48,7 @@ public class Credential extends AbstractDescribableImpl<Credential> {
         public FormValidation doValidate(@QueryParameter String apiUrl, @QueryParameter String username, @QueryParameter Secret password, @QueryParameter String apiToken) throws IOException {
             GitHub gitHub;
             if (Util.fixEmpty(apiUrl) != null) {
-                gitHub = GitHub.connectToEnterprise(apiUrl,username,apiToken);
+                gitHub = GitHub.connectUsingOAuth(apiUrl, apiToken);
             } else {
                 gitHub = GitHub.connect(username,apiToken,Secret.toString(password));
             }
