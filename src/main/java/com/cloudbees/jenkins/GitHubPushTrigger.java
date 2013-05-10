@@ -67,6 +67,8 @@ public class GitHubPushTrigger extends Trigger<AbstractProject<?,?>> implements 
      */
     public void onPost(String triggeredByUser) {
         final String pushBy = triggeredByUser;
+        
+        ////why isnt it running always!?!?
         getDescriptor().queue.execute(new Runnable() {
             public void run() {
                 try {
@@ -229,7 +231,7 @@ public class GitHubPushTrigger extends Trigger<AbstractProject<?,?>> implements 
 
     @Extension
     public static class DescriptorImpl extends TriggerDescriptor {
-        private transient final SequentialExecutionQueue queue = new SequentialExecutionQueue(Executors.newSingleThreadExecutor());
+        private transient final SequentialExecutionQueue queue = new SequentialExecutionQueue(Executors.newCachedThreadPool());
 
         private boolean manageHook;
         private String hookUrl;
