@@ -52,7 +52,6 @@ public class GitHubWebHook implements UnprotectedRootAction {
      * Logs in as the given user and returns the connection object.
      */
     public Iterable<GitHub> login(String host, String userName) {
-        if (host.equals("github.com")) {
             final List<Credential> l = DescriptorImpl.get().getCredentials();
 
             // if the username is not an organization, we should have the right user account on file
@@ -86,9 +85,6 @@ public class GitHubWebHook implements UnprotectedRootAction {
                     };
                 }
             };
-        } else {
-            return Collections.<GitHub> emptyList();
-        }
     }
 
     /*
